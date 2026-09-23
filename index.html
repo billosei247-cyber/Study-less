@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarity — Study with Understanding</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,600;9..144,1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{
+        sans:['Plus Jakarta Sans','sans-serif'],
+        display:['Fraunces','serif']
+      },
+      colors:{
+        cream:'#FFFBF5',
+        ink:'#0F172A',
+        sage:'#E8F0E9',
+        peach:'#FFF0E6',
+        accent:'#FF7A45',
+        accent2:'#6366F1',
+        moss:'#1A2E1E'
+      }
+    }
+  }
+}
+</script>
+<style>
+*{scrollbar-width:thin; scrollbar-color:#CBD5E1 transparent}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:999px}
+.flip-card{perspective:1000px}
+.flip-inner{transition:transform 0.6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{backface-visibility:hidden}
+.flip-back{transform:rotateY(180deg)}
+.range-slider{ -webkit-appearance:none;appearance:none;height:6px;background:#E2E8F0;border-radius:999px}
+.range-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:#0F172A;border-radius:999px;cursor:pointer;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+*{ -webkit-font-smoothing:antialiased}
+.glass{background:rgba(255,255,255,0.8);backdrop-filter:blur(12px)}
+</style>
+</head>
+<body class="bg-cream text-ink font-sans antialiased overflow-x-hidden">
+<!-- Top Nav -->
+<header class="sticky top-0 z-40 bg-cream/80 backdrop-blur-xl border-b border-black/[0.06]">
+  <div class="max-w-[1400px] mx-auto px-4 md:px-6 h-[64px] flex items-center justify-between gap-4">
+    <div class="flex items-center gap-6 md:gap-8">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-ink flex items-center justify-center text-white font-display text-[18px]">C</div>
+        <span class="font-display text-[22px] tracking-tight hidden sm:block">Clarity</span>
+        <span class="hidden md:inline-flex ml-2 text-[11px] font-semibold tracking-widest uppercase px-2 py-1 rounded-full bg-white border border-black/10">Study OS</span>
+      </div>
+      <nav class="hidden lg:flex items-center gap-1 bg-white p-1 rounded-full border border-black/5 shadow-sm">
+        <button data-nav="dashboard" class="nav-btn active px-4 py-1.5 rounded-full text-sm font-semibold bg-ink text-white transition">Dashboard</button>
+        <button data-nav="simplify" class="nav-btn px-4 py-1.5 rounded-full text-sm font-medium hover:bg-black/5 transition">Simplify</button>
+        <button data-nav="cards" class="nav-btn px-4 py-1.5 rounded-full text-sm font-medium hover:bg-black/5 transition">Flashcards</button>
+        <button data-nav="focus" class="nav-btn px-4 py-1.5 rounded-full text-sm font-medium hover:bg-black/5 transition">Focus</button>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2 md:gap-3 flex-1 justify-end">
+      <div class="hidden md:flex items-center gap-2 bg-white border border-black/5 rounded-full px-3 py-2 w-[280px] shadow-sm">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+        <input id="globalSearch" placeholder="Search notes, cards, topics..." class="bg-transparent outline-none text-sm w-full placeholder:text-slate-400">
+        <span class="text-[11px] bg-sage px-1.5 py-0.5 rounded font-medium">⌘K</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 bg-white border border-black/5 rounded-full px-3 py-1.5 shadow-sm">
+        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-sm font-semibold">7 day streak</span>
+        <span class="text-sm">🔥</span>
+      </div>
+      <button id="mobileMenuBtn" class="lg:hidden w-9 h-9 rounded-full bg-white border border-black/5 flex items-center justify-center">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-orange-400 p-[2px]">
+        <img src="https://i.pravatar.cc/100?img=33" class="w-full h-full rounded-full object-cover border-2 border-white">
+      </div>
+    </div>
+  </div>
+  <!-- Mobile nav drawer -->
+  <div id="mobileNav" class="hidden lg:hidden border-t border-black/5 bg-white px-4 py-3">
+    <div class="grid grid-cols-4 gap-2">
+      <button data-nav="dashboard" class="nav-btn-mobile active flex flex-col items-center gap-1 p-3 rounded-2xl bg-ink text-white"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-xs font-medium">Home</span></button>
+      <button data-nav="simplify" class="nav-btn-mobile flex flex-col items-center gap-1 p-3 rounded-2xl bg-black/5"><i data-lucide="sparkles" class="w-5 h-5"></i><span class="text-xs font-medium">Simplify</span></button>
+      <button data-nav="cards" class="nav-btn-mobile flex flex-col items-center gap-1 p-3 rounded-2xl bg-black/5"><i data-lucide="layers" class="w-5 h-5"></i><span class="text-xs font-medium">Cards</span></button>
+      <button data-nav="focus" class="nav-btn-mobile flex flex-col items-center gap-1 p-3 rounded-2xl bg-black/5"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-xs font-medium">Focus</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 flex gap-6 items-start">
+  <!-- Sidebar - desktop -->
+  <aside class="hidden xl:flex flex-col gap-6 w-[260px] shrink-0 sticky top-[88px]">
+    <!-- Profile card -->
+    <div class="bg-white rounded-[24px] p-5 border border-black/5 shadow-sm">
+      <div class="flex items-center gap-3">
+        <img src="https://i.pravatar.cc/100?img=33" class="w-12 h-12 rounded-full object-cover">
+        <div>
+          <div class="font-semibold leading-none">Maya Chen</div>
+          <div class="text-xs text-slate-500 mt-1">Biology • Year 2</div>
+        </div>
+        <span class="ml-auto w-7 h-7 rounded-full bg-sage flex items-center justify-center"><i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mt-5">
+        <div class="bg-cream rounded-2xl p-3 text-center border border-black/5">
+          <div class="text-[18px] font-bold leading-none">87%</div>
+          <div class="text-[10px] tracking-widest uppercase font-semibold text-slate-500 mt-1">Recall</div>
+        </div>
+        <div class="bg-cream rounded-2xl p-3 text-center border border-black/5">
+          <div class="text-[18px] font-bold leading-none">142</div>
+          <div class="text-[10px] tracking-widest uppercase font-semibold text-slate-500 mt-1">Cards</div>
+        </div>
+        <div class="bg-cream rounded-2xl p-3 text-center border border-black/5">
+          <div class="text-[18px] font-bold leading-none">22h</div>
+          <div class="text-[10px] tracking-widest uppercase font-semibold text-slate-500 mt-1">Focus</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Goal -->
+    <div class="bg-moss text-white rounded-[24px] p-5 relative overflow-hidden">
+      <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+      <div class="text-xs tracking-widest uppercase opacity-60 font-semibold">Today's goal</div>
+      <div class="font-display text-[20px] leading-tight mt-2">Finish Cellular Respiration</div>
+      <div class="mt-4 flex items-center gap-3">
+        <div class="flex-1 h-2 bg-white/15 rounded-full overflow-hidden">
+          <div class="h-full bg-accent rounded-full" style="width:68%"></div>
+        </div>
+        <span class="text-sm font-semibold">68%</span>
+      </div>
+      <div class="mt-2 text-xs opacity-60">3 of 5 tasks • 18 min left</div>
+      <button onclick="switchTab('focus')" class="mt-4 w-full bg-white text-moss rounded-full py-2.5 text-sm font-semibold flex items-center justify-center gap-2">Start focus session <i data-lucide="play" class="w-4 h-4 fill-current"></i></button>
+    </div>
+
+    <!-- Subjects -->
+    <div class="bg-white rounded-[24px] p-5 border border-black/5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold">Subjects</h3>
+        <button class="w-7 h-7 rounded-full bg-cream border border-black/5 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button>
+      </div>
+      <div class="mt-4 space-y-3" id="subjectList">
+        <!-- injected -->
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-[24px] p-5 text-white relative overflow-hidden">
+      <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-white/15 rounded-full"></div>
+      <div class="text-sm font-semibold flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Clarity Pro</div>
+      <p class="text-sm opacity-80 mt-1 leading-relaxed">Unlock unlimited simplifications & spaced repetition.</p>
+      <button class="mt-4 bg-white text-violet-700 px-4 py-2 rounded-full text-sm font-semibold">Upgrade — $8/mo</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-w-0">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view space-y-6">
+      <!-- Hero -->
+      <div class="bg-white rounded-[28px] border border-black/5 shadow-sm overflow-hidden">
+        <div class="grid md:grid-cols-[1.15fr_0.85fr] gap-0">
+          <div class="p-6 md:p-8 lg:p-10">
+            <div class="inline-flex items-center gap-2 bg-sage rounded-full px-3 py-1.5 text-xs font-semibold">
+              <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> New • Feynman Technique guide added
+            </div>
+            <h1 class="font-display text-[32px] md:text-[42px] leading-[0.95] tracking-tight mt-4">Study less,<br><span class="italic font-normal">understand more.</span></h1>
+            <p class="text-slate-600 mt-3 leading-relaxed max-w-[520px]">Paste any confusing topic. Clarity instantly simplifies it, creates analogies, and builds flashcards — so you remember because you <em>actually</em> get it.</p>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <button onclick="switchTab('simplify')" class="bg-ink text-white px-6 py-3 rounded-full font-semibold text-sm flex items-center gap-2 hover:bg-black transition">Simplify my notes <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+              <button onclick="switchTab('cards')" class="bg-white border border-black/10 px-6 py-3 rounded-full font-semibold text-sm">View flashcards</button>
+            </div>
+            <div class="flex items-center gap-6 mt-8 pt-6 border-t border-black/5">
+              <div class="flex -space-x-2">
+                <img src="https://i.pravatar.cc/100?img=12" class="w-8 h-8 rounded-full border-2 border-white">
+                <img src="https://i.pravatar.cc/100?img=14" class="w-8 h-8 rounded-full border-2 border-white">
+                <img src="https://i.pravatar.cc/100?img=16" class="w-8 h-8 rounded-full border-2 border-white">
+              </div>
+              <div class="text-xs leading-tight">
+                <div class="font-semibold">Trusted by 42,000+ students</div>
+                <div class="text-slate-500">4.9/5 avg. understanding score</div>
+              </div>
+              <div class="hidden sm:flex items-center gap-1 ml-auto">
+                <span class="w-8 h-[2px] bg-ink"></span>
+                <span class="w-2 h-2 rounded-full border-2 border-ink"></span>
+                <span class="w-2 h-2 rounded-full bg-black/10"></span>
+                <span class="w-2 h-2 rounded-full bg-black/10"></span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-peach p-6 md:p-6 lg:p-8 flex flex-col gap-4 border-t md:border-t-0 md:border-l border-black/5">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold flex items-center gap-2"><span class="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center"><i data-lucide="lightbulb" class="w-4 h-4"></i></span> Quick simplify</h3>
+              <span class="text-xs font-medium px-2 py-1 rounded-full bg-white border border-black/5">Try demo</span>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/5 shadow-sm">
+              <div class="text-xs font-semibold tracking-widest uppercase text-slate-500">Paste confusing text</div>
+              <textarea id="quickInput" rows="3" placeholder="e.g. Photosynthesis is the process by which green plants use sunlight to synthesize foods with the help of chlorophyll..." class="w-full mt-2 text-sm leading-relaxed outline-none resize-none placeholder:text-slate-400">Mitochondria is the powerhouse of the cell. It generates ATP through cellular respiration involving glycolysis, Krebs cycle and electron transport chain across the inner membrane.</textarea>
+              <div class="flex flex-wrap gap-2 mt-3">
+                <button onclick="quickAction('simple')" class="text-xs font-semibold bg-ink text-white px-3 py-1.5 rounded-full">Simplify ✨</button>
+                <button onclick="quickAction('analogy')" class="text-xs font-semibold bg-white border border-black/10 px-3 py-1.5 rounded-full">Analogy</button>
+                <button onclick="quickAction('steps')" class="text-xs font-semibold bg-white border border-black/10 px-3 py-1.5 rounded-full">Steps</button>
+                <button onclick="quickAction('quiz')" class="text-xs font-semibold bg-white border border-black/10 px-3 py-1.5 rounded-full">Quiz me</button>
+              </div>
+            </div>
+            <div id="quickOutput" class="bg-ink text-white rounded-2xl p-4 relative overflow-hidden">
+              <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+              <div class="text-xs tracking-widest uppercase opacity-60 font-semibold">Simplified</div>
+              <div id="quickOutputText" class="text-sm leading-relaxed mt-2 opacity-95">Click <b>Simplify</b> to see the magic. We break complex ideas into bite-sized, memorable explanations.</div>
+              <div class="flex gap-2 mt-3">
+                <button onclick="saveAsCard()" class="text-xs font-semibold bg-white text-ink px-3 py-1.5 rounded-full flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> Save as flashcards</button>
+                <button onclick="copyQuick()" class="text-xs font-semibold bg-white/15 px-3 py-1.5 rounded-full">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-[20px] p-4 border border-black/5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-sage flex items-center justify-center shrink-0"><i data-lucide="brain" class="w-5 h-5"></i></div>
+          <div>
+            <div class="text-xs tracking-widest uppercase font-semibold text-slate-500">Understanding</div>
+            <div class="font-bold text-lg leading-none mt-1">82% <span class="text-emerald-600 text-xs font-semibold">↑ 6%</span></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-[20px] p-4 border border-black/5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-peach flex items-center justify-center shrink-0"><i data-lucide="clock-3" class="w-5 h-5"></i></div>
+          <div>
+            <div class="text-xs tracking-widest uppercase font-semibold text-slate-500">Focus today</div>
+            <div class="font-bold text-lg leading-none mt-1">1h 42m</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-[20px] p-4 border border-black/5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center shrink-0"><i data-lucide="layers" class="w-5 h-5 text-violet-600"></i></div>
+          <div>
+            <div class="text-xs tracking-widest uppercase font-semibold text-slate-500">Due cards</div>
+            <div class="font-bold text-lg leading-none mt-1">12 <span class="text-xs font-medium text-slate-500">/ 142</span></div>
+          </div>
+        </div>
+        <div class="bg-ink text-white rounded-[20px] p-4 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center shrink-0"><i data-lucide="trophy" class="w-5 h-5"></i></div>
+          <div>
+            <div class="text-xs tracking-widest uppercase font-semibold opacity-60">Weekly rank</div>
+            <div class="font-bold text-lg leading-none mt-1">#3 in Biology</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle grid -->
+      <div class="grid lg:grid-cols-[1.4fr_0.9fr] gap-6">
+        <!-- Planner -->
+        <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-5 md:p-6">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-semibold text-[18px] flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center"><i data-lucide="check" class="w-4 h-4"></i></span> Today's plan</h3>
+            <div class="flex items-center gap-2">
+              <span class="hidden sm:inline text-xs font-medium px-2.5 py-1 rounded-full bg-sage border border-black/5" id="progressText">3 / 5 done</span>
+              <button onclick="openTaskModal()" class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
+            <button class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-semibold bg-ink text-white" data-filter="all">All</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium bg-black/5" data-filter="Biology">Biology</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium bg-black/5" data-filter="Chemistry">Chemistry</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium bg-black/5" data-filter="Math">Math</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium bg-black/5" data-filter="todo">To do</button>
+          </div>
+          <div id="taskList" class="mt-4 space-y-3">
+            <!-- injected -->
+          </div>
+          <div class="mt-4 bg-cream rounded-2xl p-3 flex items-center gap-3 border border-black/5">
+            <input id="quickTaskInput" placeholder="Add a task and press Enter..." class="flex-1 bg-transparent outline-none text-sm placeholder:text-slate-500">
+            <select id="quickTaskSubject" class="text-xs font-semibold bg-white border border-black/5 rounded-full px-2 py-1.5 outline-none">
+              <option>Biology</option><option>Chemistry</option><option>Math</option><option>History</option>
+            </select>
+            <button onclick="quickAddTask()" class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center shrink-0"><i data-lucide="arrow-up" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+
+        <!-- Focus + Feynman -->
+        <div class="space-y-6">
+          <!-- Focus mini -->
+          <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-5 md:p-6">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-peach flex items-center justify-center"><i data-lucide="timer" class="w-4 h-4"></i></span> Focus timer</h3>
+              <div class="flex bg-black/5 p-1 rounded-full">
+                <button onclick="setTimerMode('focus')" id="mode-focus" class="timer-mode active px-3 py-1 rounded-full text-xs font-semibold bg-white shadow-sm">Focus 25</button>
+                <button onclick="setTimerMode('short')" id="mode-short" class="timer-mode px-3 py-1 rounded-full text-xs font-medium">Break 5</button>
+                <button onclick="setTimerMode('long')" id="mode-long" class="timer-mode px-3 py-1 rounded-full text-xs font-medium">Long 15</button>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col items-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-full h-full -rotate-90">
+                  <circle cx="96" cy="96" r="88" stroke="#F1F5F9" stroke-width="10" fill="none"/>
+                  <circle id="timerProgress" cx="96" cy="96" r="88" stroke="#FF7A45" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="120" class="transition-all duration-500"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <div id="timerDisplay" class="font-display text-[42px] leading-none tracking-tight">25:00</div>
+                  <div id="timerLabel" class="text-xs tracking-widest uppercase font-semibold text-slate-500 mt-1">Deep work</div>
+                  <div class="text-xs text-slate-400 mt-1" id="timerSession">Session 1 of 4</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 mt-6">
+                <button id="timerBtn" onclick="toggleTimer()" class="bg-ink text-white px-8 py-3 rounded-full font-semibold text-sm flex items-center gap-2 hover:bg-black transition"><i data-lucide="play" class="w-4 h-4 fill-white"></i> Start</button>
+                <button onclick="resetTimer()" class="w-11 h-11 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+                <button onclick="skipTimer()" class="w-11 h-11 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="skip-forward" class="w-4 h-4"></i></button>
+              </div>
+              <div class="flex items-center gap-1.5 mt-4">
+                <span class="w-2 h-2 rounded-full bg-ink"></span><span class="w-2 h-2 rounded-full bg-ink"></span><span class="w-2 h-2 rounded-full bg-black/15"></span><span class="w-2 h-2 rounded-full bg-black/15"></span>
+                <span class="text-xs text-slate-500 ml-2">2 sessions completed today</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feynman -->
+          <div class="bg-gradient-to-br from-[#FFF7ED] to-white rounded-[24px] border border-black/5 p-5 md:p-6">
+            <h3 class="font-semibold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center">✍️</span> Feynman check</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">Explain the topic in your own words. We'll spot the gaps.</p>
+            <textarea id="feynmanInput" rows="3" placeholder="Explain Mitochondria like you're teaching a 12-year-old..." class="w-full mt-3 bg-white border border-black/5 rounded-2xl p-3 text-sm outline-none focus:border-amber-300 resize-none"></textarea>
+            <button onclick="checkFeynman()" class="mt-3 w-full bg-amber-400 hover:bg-amber-500 text-ink font-semibold py-2.5 rounded-full text-sm transition">Check my understanding</button>
+            <div id="feynmanFeedback" class="hidden mt-3 bg-white rounded-2xl p-3 border border-amber-200 text-sm leading-relaxed"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row -->
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-[24px] border border-black/5 shadow-sm p-5 md:p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">Active flashcards</h3>
+            <button onclick="switchTab('cards')" class="text-sm font-semibold text-violet-600 flex items-center gap-1">Open deck <i data-lucide="arrow-up-right" class="w-4 h-4"></i></button>
+          </div>
+          <div id="previewCards" class="grid sm:grid-cols-3 gap-4 mt-4">
+            <!-- injected -->
+          </div>
+          <div class="mt-4 flex items-center justify-between bg-cream rounded-2xl p-3 border border-black/5">
+            <div class="text-sm">
+              <div class="font-semibold">Spaced repetition ready</div>
+              <div class="text-xs text-slate-500">12 cards due • Avg. recall 82%</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="hidden sm:flex h-2 w-24 bg-black/10 rounded-full overflow-hidden"><div class="h-full bg-emerald-500" style="width:72%"></div></div>
+              <button onclick="switchTab('cards')" class="bg-ink text-white px-4 py-2 rounded-full text-sm font-semibold">Study now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-5 md:p-6">
+          <h3 class="font-semibold">Insights</h3>
+          <div class="mt-4 space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-semibold">
+                <span class="text-slate-500 uppercase tracking-widest">Weekly focus</span><span>6.2h / 8h</span>
+              </div>
+              <div class="flex gap-1 mt-2 h-16 items-end">
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:45%"><div class="w-full bg-ink rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:70%"><div class="w-full bg-ink rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:55%"><div class="w-full bg-ink rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:85%"><div class="w-full bg-accent rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:60%"><div class="w-full bg-ink rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:40%"><div class="w-full bg-black/15 rounded-t-lg" style="height:100%"></div></div>
+                <div class="flex-1 bg-black/5 rounded-t-lg" style="height:65%"><div class="w-full bg-ink rounded-t-lg" style="height:100%"></div></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+            </div>
+            <div class="bg-sage rounded-2xl p-4 border border-black/5">
+              <div class="text-sm font-semibold flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Insight</div>
+              <p class="text-sm leading-relaxed mt-1 text-slate-700">You recall <b>34% better</b> when you study before 11am. Try moving Biology to mornings.</p>
+            </div>
+            <div class="flex gap-2">
+              <div class="flex-1 bg-cream rounded-2xl p-3 border border-black/5 text-center">
+                <div class="text-xs uppercase tracking-widest font-semibold text-slate-500">Best time</div>
+                <div class="font-bold mt-1">9 — 11 AM</div>
+              </div>
+              <div class="flex-1 bg-cream rounded-2xl p-3 border border-black/5 text-center">
+                <div class="text-xs uppercase tracking-widest font-semibold text-slate-500">Top subject</div>
+                <div class="font-bold mt-1">Biology</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMPLIFY VIEW -->
+    <section id="view-simplify" class="view hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="font-display text-[32px] leading-none">Simplify anything</h2>
+          <p class="text-slate-600 mt-2">Turn dense notes into clear explanations, analogies & quizzes.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-medium">
+          <span class="px-3 py-1.5 rounded-full bg-white border border-black/5 flex items-center gap-1.5"><span class="w-2 h-2 bg-emerald-500 rounded-full"></span> AI ready</span>
+          <span class="px-3 py-1.5 rounded-full bg-amber-100 border border-amber-200">ELI15 mode</span>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-6">
+        <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-5 md:p-6">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Your notes</label>
+            <div class="flex gap-1">
+              <button onclick="loadSample(1)" class="text-xs font-medium px-3 py-1 rounded-full bg-cream border border-black/5">Sample: Biology</button>
+              <button onclick="loadSample(2)" class="text-xs font-medium px-3 py-1 rounded-full bg-cream border border-black/5">Sample: Chemistry</button>
+              <button onclick="loadSample(3)" class="text-xs font-medium px-3 py-1 rounded-full bg-cream border border-black/5">Sample: History</button>
+            </div>
+          </div>
+          <textarea id="simplifyInput" rows="10" placeholder="Paste your lecture notes, textbook paragraph, or any confusing topic here..." class="w-full mt-3 bg-cream border border-black/5 rounded-2xl p-4 text-sm leading-relaxed outline-none focus:border-violet-300 resize-none">Osmosis is the movement of water molecules through a semipermeable membrane from a region of low solute concentration to a region of high solute concentration. It is a passive process and does not require energy. Water potential plays a key role and osmosis continues until equilibrium is reached. In cells, osmosis is vital for maintaining turgor pressure in plants and for water balance in animal cells.</textarea>
+          <div class="flex items-center justify-between mt-3">
+            <div class="text-xs text-slate-500"><span id="charCount">0</span> characters • Auto-saves</div>
+            <button onclick="clearSimplify()" class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5">Clear</button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5">
+            <button onclick="doSimplify('simple')" class="bg-ink text-white rounded-2xl p-4 text-left hover:bg-black transition group">
+              <div class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center"><i data-lucide="wand-2" class="w-4 h-4"></i></div>
+              <div class="font-semibold text-sm mt-3">Simplify</div>
+              <div class="text-xs opacity-60 leading-tight mt-1">Plain English, bullet points</div>
+            </button>
+            <button onclick="doSimplify('analogy')" class="bg-white border border-black/5 rounded-2xl p-4 text-left hover:border-black/10 transition">
+              <div class="w-8 h-8 rounded-full bg-peach flex items-center justify-center"><i data-lucide="lightbulb" class="w-4 h-4"></i></div>
+              <div class="font-semibold text-sm mt-3">Analogy</div>
+              <div class="text-xs text-slate-500 leading-tight mt-1">Real-life comparison</div>
+            </button>
+            <button onclick="doSimplify('steps')" class="bg-white border border-black/5 rounded-2xl p-4 text-left hover:border-black/10 transition">
+              <div class="w-8 h-8 rounded-full bg-sage flex items-center justify-center"><i data-lucide="list-ordered" class="w-4 h-4"></i></div>
+              <div class="font-semibold text-sm mt-3">Steps</div>
+              <div class="text-xs text-slate-500 leading-tight mt-1">Process breakdown</div>
+            </button>
+            <button onclick="doSimplify('quiz')" class="bg-white border border-black/5 rounded-2xl p-4 text-left hover:border-black/10 transition">
+              <div class="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center"><i data-lucide="help-circle" class="w-4 h-4 text-violet-600"></i></div>
+              <div class="font-semibold text-sm mt-3">Quiz me</div>
+              <div class="text-xs text-slate-500 leading-tight mt-1">Generate 3 questions</div>
+            </button>
+          </div>
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-xs font-semibold">Reading level</span>
+            <input type="range" min="1" max="3" value="2" id="levelRange" class="range-slider flex-1">
+            <span class="text-xs font-medium px-2 py-1 rounded-full bg-cream border border-black/5" id="levelLabel">High school</span>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-ink text-white rounded-[24px] p-6 relative overflow-hidden min-h-[420px] flex flex-col">
+            <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="flex items-center justify-between">
+              <div class="text-xs tracking-widest uppercase font-semibold opacity-60">Output</div>
+              <div class="flex gap-2">
+                <button onclick="copySimplify()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                <button onclick="saveSimplifyAsCards()" class="w-8 h-8 rounded-full bg-white text-ink flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+            <div id="simplifyOutput" class="mt-4 space-y-4 flex-1">
+              <div class="flex gap-3">
+                <span class="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0 text-sm">✨</span>
+                <div>
+                  <div class="font-semibold">Ready to simplify</div>
+                  <p class="text-sm opacity-70 leading-relaxed mt-1">Paste your notes on the left and choose a mode. We'll transform them into something you actually remember.</p>
+                </div>
+              </div>
+              <div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+                <div class="text-xs font-semibold opacity-60 uppercase tracking-widest">Tip</div>
+                <p class="text-sm leading-relaxed mt-1">Try <b>Analogy</b> for abstract concepts, <b>Steps</b> for processes, and <b>Quiz me</b> to test yourself immediately.</p>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-6">
+              <button onclick="saveSimplifyAsCards()" class="flex-1 bg-white text-ink py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i> Save as flashcards</button>
+              <button onclick="doSimplify('simple')" class="px-6 bg-white/10 py-2.5 rounded-full text-sm font-semibold border border-white/20">Regenerate</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <h4 class="font-semibold flex items-center gap-2"><i data-lucide="history" class="w-4 h-4"></i> Recent simplifications</h4>
+            <div id="recentList" class="mt-3 space-y-2">
+              <div class="flex items-center gap-3 p-3 rounded-2xl bg-cream border border-black/5">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-xs">🧬</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium truncate">Mitochondria & ATP synthesis</div>
+                  <div class="text-xs text-slate-500">Simplified • 2 min ago</div>
+                </div>
+                <button class="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-2xl bg-cream border border-black/5 opacity-70">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-xs">⚗️</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium truncate">Le Chatelier's Principle</div>
+                  <div class="text-xs text-slate-500">Analogy • 1 hour ago</div>
+                </div>
+                <button class="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLASHCARDS VIEW -->
+    <section id="view-cards" class="view hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="font-display text-[32px] leading-none">Flashcards</h2>
+          <p class="text-slate-600 mt-2">Active recall • Spaced repetition • Built from your simplifications</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="openCardModal()" class="bg-ink text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> New card</button>
+          <button onclick="shuffleCards()" class="bg-white border border-black/10 px-5 py-2.5 rounded-full text-sm font-semibold">Shuffle</button>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-[320px_1fr] gap-6">
+        <div class="space-y-4">
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <h3 class="font-semibold">Decks</h3>
+            <div class="mt-4 space-y-2">
+              <button class="w-full flex items-center gap-3 p-3 rounded-2xl bg-ink text-white text-left">
+                <span class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">🧬</span>
+                <div class="flex-1"><div class="text-sm font-semibold">Biology</div><div class="text-xs opacity-60">48 cards • 8 due</div></div>
+                <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
+              </button>
+              <button class="w-full flex items-center gap-3 p-3 rounded-2xl bg-cream border border-black/5 text-left">
+                <span class="w-9 h-9 rounded-xl bg-white flex items-center justify-center">⚗️</span>
+                <div class="flex-1"><div class="text-sm font-semibold">Chemistry</div><div class="text-xs text-slate-500">32 cards • 3 due</div></div>
+              </button>
+              <button class="w-full flex items-center gap-3 p-3 rounded-2xl bg-cream border border-black/5 text-left">
+                <span class="w-9 h-9 rounded-xl bg-white flex items-center justify-center">📐</span>
+                <div class="flex-1"><div class="text-sm font-semibold">Math</div><div class="text-xs text-slate-500">28 cards • 1 due</div></div>
+              </button>
+              <button class="w-full flex items-center gap-3 p-3 rounded-2xl border border-dashed border-black/15 text-left justify-center text-sm font-medium text-slate-500"><i data-lucide="plus" class="w-4 h-4"></i> New deck</button>
+            </div>
+            <div class="mt-5 bg-sage rounded-2xl p-4 border border-black/5">
+              <div class="text-sm font-semibold">Daily progress</div>
+              <div class="mt-2 h-2 bg-black/10 rounded-full overflow-hidden"><div id="deckProgress" class="h-full bg-ink rounded-full" style="width:42%"></div></div>
+              <div class="text-xs text-slate-600 mt-1.5"><span id="studiedCount">5</span> / 12 due studied</div>
+            </div>
+          </div>
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <h4 class="font-semibold text-sm">Study stats</h4>
+            <div class="grid grid-cols-3 gap-2 mt-3">
+              <div class="bg-cream rounded-2xl p-3 text-center border border-black/5"><div class="text-lg font-bold">82%</div><div class="text-[10px] uppercase tracking-widest font-semibold text-slate-500">Recall</div></div>
+              <div class="bg-cream rounded-2xl p-3 text-center border border-black/5"><div class="text-lg font-bold">142</div><div class="text-[10px] uppercase tracking-widest font-semibold text-slate-500">Total</div></div>
+              <div class="bg-cream rounded-2xl p-3 text-center border border-black/5"><div class="text-lg font-bold">18</div><div class="text-[10px] uppercase tracking-widest font-semibold text-slate-500">Streak</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Study card -->
+          <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-6 md:p-8">
+            <div class="flex items-center justify-between">
+              <div class="text-xs tracking-widest uppercase font-semibold text-slate-500">Study mode • Tap to flip</div>
+              <div class="flex items-center gap-2">
+                <span id="cardCounter" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cream border border-black/5">1 / 8</span>
+                <button onclick="toggleFullscreen()" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+
+            <div id="studyCard" class="flip-card mt-6 cursor-pointer" onclick="flipCard()">
+              <div class="flip-inner relative">
+                <div class="flip-front bg-gradient-to-br from-[#FFFBF5] to-[#FFF0E6] border border-black/5 rounded-[24px] p-8 md:p-10 min-h-[280px] flex flex-col">
+                  <div class="text-xs font-semibold tracking-widest uppercase text-accent">Question</div>
+                  <div id="cardQuestion" class="font-display text-[22px] md:text-[26px] leading-tight mt-4 flex-1 flex items-center">What is osmosis and why does it not require energy?</div>
+                  <div class="flex items-center justify-between mt-6 pt-6 border-t border-black/5">
+                    <span class="text-xs text-slate-500 flex items-center gap-1.5"><i data-lucide="eye" class="w-3.5 h-3.5"></i> Tap to reveal</span>
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-white border border-black/5">Biology • Osmosis</span>
+                  </div>
+                </div>
+                <div class="flip-back absolute inset-0 bg-ink text-white rounded-[24px] p-8 md:p-10 min-h-[280px] flex flex-col">
+                  <div class="text-xs tracking-widest uppercase font-semibold opacity-60">Answer • Simplified</div>
+                  <div id="cardAnswer" class="text-[16px] leading-relaxed mt-4 flex-1">Osmosis is water moving through a tiny filter (membrane) from where there’s lots of water to where there’s less, to balance things out. It’s passive — like a ball rolling downhill, no energy needed — just natural movement until both sides are equal.</div>
+                  <div class="flex gap-2 mt-6">
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-white/15">ELI15</span>
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-white/15">Analogy included</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-6" id="ratingButtons">
+              <button onclick="rateCard('hard')" class="bg-[#FFE5E0] hover:bg-[#FFD5CC] border border-black/5 rounded-2xl p-4 text-center transition">
+                <div class="text-lg">😵‍💫</div>
+                <div class="text-sm font-semibold mt-1">Hard</div>
+                <div class="text-xs text-slate-600">1 day</div>
+              </button>
+              <button onclick="rateCard('good')" class="bg-sage hover:bg-[#D6E8D7] border border-black/5 rounded-2xl p-4 text-center transition">
+                <div class="text-lg">🙂</div>
+                <div class="text-sm font-semibold mt-1">Good</div>
+                <div class="text-xs text-slate-600">3 days</div>
+              </button>
+              <button onclick="rateCard('easy')" class="bg-violet-100 hover:bg-violet-200 border border-black/5 rounded-2xl p-4 text-center transition">
+                <div class="text-lg">🤩</div>
+                <div class="text-sm font-semibold mt-1">Easy</div>
+                <div class="text-xs text-slate-600">7 days</div>
+              </button>
+            </div>
+            <div class="flex justify-center gap-2 mt-4">
+              <button onclick="prevCard()" class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+              <button onclick="nextCard()" class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+              <button onclick="editCurrentCard()" class="ml-2 px-4 h-10 rounded-full bg-white border border-black/10 text-sm font-medium flex items-center gap-1.5"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+              <button onclick="deleteCurrentCard()" class="px-4 h-10 rounded-full bg-white border border-black/10 text-sm font-medium text-red-600 flex items-center gap-1.5"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</button>
+            </div>
+          </div>
+
+          <!-- All cards list -->
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold">All cards in this deck</h4>
+              <div class="flex items-center gap-2">
+                <input id="cardSearch" placeholder="Search..." class="text-sm bg-cream border border-black/5 rounded-full px-3 py-1.5 outline-none w-28 md:w-40">
+                <select id="cardFilter" class="text-sm bg-cream border border-black/5 rounded-full px-3 py-1.5 outline-none"><option value="all">All</option><option value="due">Due</option><option value="new">New</option></select>
+              </div>
+            </div>
+            <div id="allCardsList" class="mt-4 grid sm:grid-cols-2 gap-3">
+              <!-- injected -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOCUS VIEW -->
+    <section id="view-focus" class="view hidden space-y-6">
+      <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
+        <div class="bg-white rounded-[24px] border border-black/5 shadow-sm p-6 md:p-8">
+          <div class="flex items-center justify-between">
+            <h2 class="font-display text-[28px]">Focus room</h2>
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sage border border-black/5 flex items-center gap-1.5"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Deep work</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1">Minimal distractions. Built-in breaks. Progress that sticks.</p>
+
+          <div class="mt-8 flex flex-col items-center bg-cream rounded-[24px] p-8 border border-black/5">
+            <div class="flex bg-white p-1 rounded-full border border-black/5 shadow-sm">
+              <button onclick="setTimerMode('focus')" id="f-mode-focus" class="timer-mode-lg active px-5 py-1.5 rounded-full text-sm font-semibold bg-ink text-white">Focus</button>
+              <button onclick="setTimerMode('short')" id="f-mode-short" class="timer-mode-lg px-5 py-1.5 rounded-full text-sm font-medium">Short break</button>
+              <button onclick="setTimerMode('long')" id="f-mode-long" class="timer-mode-lg px-5 py-1.5 rounded-full text-sm font-medium">Long break</button>
+            </div>
+            <div class="relative mt-8 w-[260px] h-[260px] md:w-[300px] md:h-[300px]">
+              <svg class="w-full h-full -rotate-90">
+                <circle cx="150" cy="150" r="130" stroke="white" stroke-width="12" fill="none"/>
+                <circle id="focusProgress" cx="150" cy="150" r="130" stroke="#0F172A" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="817" stroke-dashoffset="200" class="transition-all duration-500"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <div id="focusDisplay" class="font-display text-[56px] leading-none">25:00</div>
+                <div class="text-xs tracking-widest uppercase font-semibold text-slate-500 mt-2">Stay with it, Maya</div>
+                <div class="mt-3 flex items-center gap-1.5 text-xs text-slate-500"><i data-lucide="music" class="w-3.5 h-3.5"></i> Lo-fi • Rain</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 mt-8">
+              <button id="focusBtn" onclick="toggleTimer()" class="bg-ink text-white px-10 py-3.5 rounded-full font-semibold flex items-center gap-2 hover:bg-black transition text-sm"><i data-lucide="play" class="w-4 h-4 fill-white"></i> Start focusing</button>
+              <button onclick="resetTimer()" class="w-12 h-12 rounded-full bg-white border border-black/10 flex items-center justify-center"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex items-center gap-2 mt-6 text-xs text-slate-500">
+              <span>Ambient</span>
+              <button class="w-8 h-8 rounded-full bg-white border border-black/5 flex items-center justify-center"><i data-lucide="volume-2" class="w-4 h-4"></i></button>
+              <input type="range" class="range-slider w-24">
+              <span class="px-2 py-1 rounded-full bg-white border border-black/5 font-medium">Rain</span>
+              <span class="px-2 py-1 rounded-full bg-black/5">Lo-fi</span>
+              <span class="px-2 py-1 rounded-full bg-black/5">Silence</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 mt-6">
+            <div class="bg-ink text-white rounded-2xl p-4">
+              <div class="text-xs opacity-60 uppercase tracking-widest font-semibold">Sessions</div>
+              <div class="text-2xl font-bold mt-1">2 / 4</div>
+              <div class="text-xs opacity-60 mt-1">Today</div>
+            </div>
+            <div class="bg-white border border-black/5 rounded-2xl p-4">
+              <div class="text-xs uppercase tracking-widest font-semibold text-slate-500">Focus time</div>
+              <div class="text-2xl font-bold mt-1">52m</div>
+              <div class="text-xs text-emerald-600 font-medium mt-1">+12m vs yesterday</div>
+            </div>
+            <div class="bg-white border border-black/5 rounded-2xl p-4">
+              <div class="text-xs uppercase tracking-widest font-semibold text-slate-500">Next break</div>
+              <div class="text-2xl font-bold mt-1">in 25m</div>
+              <div class="text-xs text-slate-500 mt-1">Stretch & hydrate</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <h3 class="font-semibold flex items-center gap-2"><i data-lucide="list-todo" class="w-4 h-4"></i> Focus queue</h3>
+            <p class="text-xs text-slate-500 mt-1">Drag tasks here to focus on them</p>
+            <div id="focusQueue" class="mt-4 space-y-2">
+              <!-- injected from tasks -->
+            </div>
+            <button onclick="switchTab('dashboard')" class="mt-4 w-full bg-cream border border-black/5 rounded-full py-2.5 text-sm font-semibold">+ Add from Today's plan</button>
+          </div>
+
+          <div class="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-[24px] p-6 text-white relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+            <h3 class="font-semibold flex items-center gap-2"><i data-lucide="award" class="w-5 h-5"></i> Study streak</h3>
+            <div class="flex gap-1.5 mt-4">
+              <div class="flex-1 h-14 rounded-xl bg-white text-violet-700 flex flex-col items-center justify-center"><span class="text-xs font-semibold">M</span><span class="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs mt-1">✓</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white text-violet-700 flex flex-col items-center justify-center"><span class="text-xs font-semibold">T</span><span class="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs mt-1">✓</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white text-violet-700 flex flex-col items-center justify-center"><span class="text-xs font-semibold">W</span><span class="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs mt-1">✓</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white text-violet-700 flex flex-col items-center justify-center"><span class="text-xs font-semibold">T</span><span class="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs mt-1">✓</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white text-violet-700 flex flex-col items-center justify-center"><span class="text-xs font-semibold">F</span><span class="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs mt-1">✓</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white/15 border border-white/20 flex flex-col items-center justify-center"><span class="text-xs font-semibold">S</span><span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs mt-1">○</span></div>
+              <div class="flex-1 h-14 rounded-xl bg-white/10 border border-white/10 flex flex-col items-center justify-center opacity-60"><span class="text-xs font-semibold">S</span><span class="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center text-xs mt-1">—</span></div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-sm">
+              <span class="opacity-80">5 days • Keep it up!</span>
+              <span class="font-semibold">🔥 18 day best</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-[24px] border border-black/5 p-5">
+            <h3 class="font-semibold">Why breaks matter</h3>
+            <p class="text-sm text-slate-600 leading-relaxed mt-2">Your brain consolidates after 25 minutes. Short breaks boost recall by <b>23%</b>. Stand, breathe, then return.</p>
+            <div class="mt-3 flex gap-2">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-sage border border-black/5">Pomodoro</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-cream border border-black/5">Spaced</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-cream border border-black/5">Active recall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Task Modal -->
+<div id="taskModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-[24px] p-6 w-full max-w-md shadow-xl">
+    <div class="flex items-center justify-between">
+      <h3 class="font-semibold text-lg">New task</h3>
+      <button onclick="closeTaskModal()" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <form id="taskForm" class="mt-4 space-y-4" onsubmit="submitTask(event)">
+      <div>
+        <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Task</label>
+        <input id="taskTitle" required placeholder="e.g. Review Krebs cycle diagram" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-300">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Subject</label>
+          <select id="taskSubject" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none"><option>Biology</option><option>Chemistry</option><option>Math</option><option>History</option></select>
+        </div>
+        <div>
+          <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Estimate</label>
+          <select id="taskEstimate" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none"><option>15 min</option><option>25 min</option><option>45 min</option><option>60 min</option></select>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Priority</label>
+        <div class="flex gap-2 mt-1">
+          <label class="flex-1 cursor-pointer"><input type="radio" name="priority" value="low" class="peer sr-only"><div class="text-center py-2 rounded-xl border border-black/5 peer-checked:bg-sage peer-checked:border-emerald-200 text-sm font-medium">Low</div></label>
+          <label class="flex-1 cursor-pointer"><input type="radio" name="priority" value="medium" checked class="peer sr-only"><div class="text-center py-2 rounded-xl border border-black/5 peer-checked:bg-amber-100 peer-checked:border-amber-200 text-sm font-medium">Medium</div></label>
+          <label class="flex-1 cursor-pointer"><input type="radio" name="priority" value="high" class="peer sr-only"><div class="text-center py-2 rounded-xl border border-black/5 peer-checked:bg-red-100 peer-checked:border-red-200 text-sm font-medium">High</div></label>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-ink text-white py-3 rounded-full font-semibold text-sm">Add task</button>
+    </form>
+  </div>
+</div>
+
+<!-- Card Modal -->
+<div id="cardModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-[24px] p-6 w-full max-w-lg shadow-xl">
+    <div class="flex items-center justify-between">
+      <h3 class="font-semibold text-lg">New flashcard</h3>
+      <button onclick="closeCardModal()" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <form id="cardForm" class="mt-4 space-y-4" onsubmit="submitCard(event)">
+      <div>
+        <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Question</label>
+        <textarea id="cardQ" required rows="2" placeholder="e.g. What is the function of the Krebs cycle?" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-300 resize-none"></textarea>
+      </div>
+      <div>
+        <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Answer (simplified)</label>
+        <textarea id="cardA" required rows="3" placeholder="Explain in simple terms..." class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-300 resize-none"></textarea>
+      </div>
+      <div class="flex gap-3">
+        <div class="flex-1">
+          <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Subject</label>
+          <select id="cardSubject" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none"><option>Biology</option><option>Chemistry</option><option>Math</option></select>
+        </div>
+        <div class="flex-1">
+          <label class="text-xs font-semibold tracking-widest uppercase text-slate-500">Tag</label>
+          <input id="cardTag" placeholder="e.g. Osmosis" class="w-full mt-1 bg-cream border border-black/5 rounded-xl px-3 py-2.5 text-sm outline-none">
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-ink text-white py-3 rounded-full font-semibold text-sm">Save card</button>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-ink text-white px-5 py-3 rounded-full text-sm font-medium shadow-xl hidden items-center gap-2 z-50">
+  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+  <span id="toastMsg">Saved!</span>
+</div>
+
+<script>
+lucide.createIcons();
+
+// Data
+let tasks = [
+  {id:1, title:"Read chapter 5: Cellular Respiration", subject:"Biology", estimate:"25 min", priority:"high", done:false},
+  {id:2, title:"Practice osmosis diagram labeling", subject:"Biology", estimate:"15 min", priority:"medium", done:false},
+  {id:3, title:"Solve Le Chatelier problems (p. 42)", subject:"Chemistry", estimate:"45 min", priority:"medium", done:true},
+  {id:4, title:"Feynman: Explain Krebs cycle without notes", subject:"Biology", estimate:"15 min", priority:"high", done:false},
+  {id:5, title:"Review quadratic equations set", subject:"Math", estimate:"25 min", priority:"low", done:true},
+];
+let cards = [
+  {q:"What is osmosis and why does it not require energy?", a:"Osmosis is water moving through a tiny filter (membrane) from where there's lots of water to where there's less, to balance things out. It's passive — like a ball rolling downhill, no energy needed.", subject:"Biology", tag:"Osmosis", due:true},
+  {q:"What's the difference between diffusion and osmosis?", a:"Diffusion is any particles spreading from crowded to less crowded. Osmosis is *only water* doing that, and it needs a special membrane to pass through.", subject:"Biology", tag:"Transport", due:true},
+  {q:"Explain ATP in one sentence.", a:"ATP is the cell's rechargeable battery — it stores energy in its bonds and releases it when one phosphate breaks off.", subject:"Biology", tag:"Energy", due:false},
+  {q:"What does Le Chatelier's principle say?", a:"If you stress a chemical equilibrium (change temp, pressure, concentration), the system shifts to undo that stress — like a seesaw re-balancing.", subject:"Chemistry", tag:"Equilibrium", due:true},
+  {q:"Define water potential simply.", a:"Water potential is how badly water *wants* to move. High potential = lots of free water ready to flow to lower potential.", subject:"Biology", tag:"Osmosis", due:false},
+  {q:"Why do plants need turgor pressure?", a:"Water filling the vacuole pushes against the cell wall like air in a balloon — that pressure keeps plants stiff and upright.", subject:"Biology", tag:"Plants", due:true},
+];
+let currentCard = 0;
+let cardFlipped = false;
+let filter = 'all';
+
+// Subjects meta
+const subjects = [
+  {name:"Biology", count:48, color:"bg-emerald-500", light:"bg-sage", icon:"🧬"},
+  {name:"Chemistry", count:32, color:"bg-amber-500", light:"bg-amber-50", icon:"⚗️"},
+  {name:"Math", count:28, color:"bg-violet-500", light:"bg-violet-50", icon:"📐"},
+  {name:"History", count:14, color:"bg-orange-500", light:"bg-orange-50", icon:"🏛️"},
+];
+
+function renderSubjects(){
+  const el = document.getElementById('subjectList');
+  el.innerHTML = subjects.map(s=>`
+    <div class="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-cream transition cursor-pointer border border-transparent hover:border-black/5">
+      <span class="w-9 h-9 rounded-xl ${s.light} flex items-center justify-center text-sm border border-black/5">${s.icon}</span>
+      <div class="flex-1">
+        <div class="text-sm font-semibold leading-none">${s.name}</div>
+        <div class="text-xs text-slate-500">${s.count} cards</div>
+      </div>
+      <div class="w-1.5 h-8 rounded-full ${s.color} opacity-80"></div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function renderTasks(){
+  const list = document.getElementById('taskList');
+  const prog = document.getElementById('progressText');
+  const filtered = tasks.filter(t=>{
+    if(filter==='all') return true;
+    if(filter==='todo') return !t.done;
+    return t.subject===filter;
+  });
+  // progress
+  const done = tasks.filter(t=>t.done).length;
+  if(prog) prog.textContent = `${done} / ${tasks.length} done`;
+  // render
+  list.innerHTML = filtered.map(t=>`
+    <div class="group flex items-center gap-3 p-3 md:p-3.5 rounded-2xl border ${t.done?'bg-sage border-emerald-200':'bg-cream border-black/5 hover:border-black/10'} transition">
+      <button onclick="toggleTask(${t.id})" class="w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${t.done?'bg-emerald-500 border-emerald-500 text-white':'border-black/15 bg-white'}">
+        ${t.done?'<i data-lucide="check" class="w-3.5 h-3.5"></i>':''}
+      </button>
+      <div class="flex-1 min-w-0">
+        <div class="text-sm font-medium leading-tight ${t.done?'line-through text-slate-500':''}">${t.title}</div>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white border border-black/5">${t.subject}</span>
+          <span class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${t.estimate}</span>
+          <span class="hidden sm:inline w-1 h-1 bg-black/20 rounded-full"></span>
+          <span class="hidden sm:inline text-xs capitalize ${t.priority==='high'?'text-red-600':t.priority==='medium'?'text-amber-600':'text-emerald-600'} font-medium">${t.priority}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+        <button onclick="deleteTask(${t.id})" class="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center hover:bg-red-50"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+      </div>
+    </div>
+  `).join('') || `<div class="text-center py-8 text-sm text-slate-500 bg-cream rounded-2xl border border-dashed border-black/10">No tasks here. Add one!</div>`;
+  // focus queue
+  const fq = document.getElementById('focusQueue');
+  if(fq){
+    const pending = tasks.filter(t=>!t.done).slice(0,3);
+    fq.innerHTML = pending.map(t=>`
+      <div class="flex items-center gap-3 p-3 rounded-2xl bg-cream border border-black/5">
+        <span class="w-2 h-8 rounded-full ${t.subject==='Biology'?'bg-emerald-500':t.subject==='Chemistry'?'bg-amber-500':'bg-violet-500'}"></span>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium truncate">${t.title}</div>
+          <div class="text-xs text-slate-500">${t.subject} • ${t.estimate}</div>
+        </div>
+        <span class="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center"><i data-lucide="play" class="w-3 h-3"></i></span>
+      </div>
+    `).join('');
+  }
+  lucide.createIcons();
+}
+function renderPreviewCards(){
+  const el = document.getElementById('previewCards');
+  el.innerHTML = cards.slice(0,3).map(c=>`
+    <div class="bg-cream rounded-2xl p-4 border border-black/5 hover:border-black/10 transition cursor-pointer" onclick="switchTab('cards')">
+      <div class="text-[11px] tracking-widest uppercase font-semibold text-slate-500 flex items-center justify-between">${c.subject} <span class="w-2 h-2 rounded-full ${c.due?'bg-amber-500':'bg-emerald-500'}"></span></div>
+      <div class="text-sm font-semibold leading-snug mt-2 line-clamp-3">${c.q}</div>
+      <div class="text-xs text-slate-600 leading-relaxed mt-2 line-clamp-2">${c.a}</div>
+      <div class="mt-3 text-xs font-medium text-violet-600 flex items-center gap-1">Study →</div>
+    </div>
+  `).join('');
+}
+function renderAllCards(){
+  const q = (document.getElementById('cardSearch')?.value || '').toLowerCase();
+  const f = document.getElementById('cardFilter')?.value || 'all';
+  let list = [...cards];
+  if(q) list = list.filter(c=> (c.q+c.a+c.tag).toLowerCase().includes(q));
+  if(f==='due') list = list.filter(c=>c.due);
+  if(f==='new') list = list.filter(c=>!c.due);
+  const el = document.getElementById('allCardsList');
+  el.innerHTML = list.map((c,i)=>`
+    <div class="p-3 rounded-2xl border ${cards.indexOf(c)===currentCard?'bg-ink text-white border-ink':'bg-cream border-black/5'} cursor-pointer hover:border-black/10 transition" onclick="jumpToCard(${cards.indexOf(c)})">
+      <div class="text-xs font-semibold flex items-center justify-between opacity-70"><span>${c.subject} • ${c.tag}</span><span class="w-2 h-2 rounded-full ${c.due?'bg-amber-500':'bg-emerald-500'}"></span></div>
+      <div class="text-sm font-medium leading-snug mt-1 line-clamp-2">${c.q}</div>
+    </div>
+  `).join('') || `<div class="col-span-2 text-center py-6 text-sm text-slate-500">No cards found</div>`;
+  document.getElementById('cardCounter').textContent = `${currentCard+1} / ${cards.length}`;
+  document.getElementById('studiedCount').textContent = Math.min(5+studied, cards.length);
+  document.getElementById('deckProgress').style.width = `${Math.min(42+studied*6,100)}%`;
+}
+let studied=0;
+function updateStudyCard(){
+  const c = cards[currentCard];
+  if(!c) return;
+  document.getElementById('cardQuestion').textContent = c.q;
+  document.getElementById('cardAnswer').textContent = c.a;
+  // reset flip
+  document.getElementById('studyCard').classList.remove('flipped');
+  cardFlipped=false;
+  renderAllCards();
+  lucide.createIcons();
+}
+function flipCard(){
+  const el=document.getElementById('studyCard');
+  el.classList.toggle('flipped');
+  cardFlipped=!cardFlipped;
+}
+function nextCard(){ currentCard=(currentCard+1)%cards.length; updateStudyCard(); }
+function prevCard(){ currentCard=(currentCard-1+cards.length)%cards.length; updateStudyCard(); }
+function jumpToCard(i){ currentCard=i; updateStudyCard(); window.scrollTo({top:0,behavior:'smooth'});}
+function rateCard(type){
+  if(!cardFlipped) flipCard();
+  studied++;
+  showToast(type==='easy'?'Marked easy — see you in 7 days!':type==='good'?'Good! Next review in 3 days.':'We’ll show this again tomorrow.');
+  setTimeout(()=>{ nextCard(); }, 400);
+}
+function shuffleCards(){ cards.sort(()=>Math.random()-0.5); currentCard=0; updateStudyCard(); showToast('Shuffled deck 🔀');}
+function editCurrentCard(){
+  const c=cards[currentCard];
+  document.getElementById('cardQ').value=c.q;
+  document.getElementById('cardA').value=c.a;
+  document.getElementById('cardSubject').value=c.subject;
+  document.getElementById('cardTag').value=c.tag;
+  openCardModal();
+  // remove old on save
+  document.getElementById('cardForm').dataset.editing=currentCard;
+}
+function deleteCurrentCard(){
+  if(confirm('Delete this card?')){
+    cards.splice(currentCard,1);
+    if(currentCard>=cards.length) currentCard=0;
+    if(cards.length===0){ cards.push({q:"Add your first card!",a:"Click 'New card' to create one.",subject:"General",tag:"New",due:false});}
+    updateStudyCard(); renderPreviewCards(); showToast('Card deleted');
+  }
+}
+
+// Tasks actions
+function toggleTask(id){
+  const t=tasks.find(x=>x.id===id);
+  if(t) t.done=!t.done;
+  renderTasks();
+  showToast(t.done?'Completed! 🎉':'Moved back to todo');
+}
+function deleteTask(id){
+  tasks=tasks.filter(t=>t.id!==id);
+  renderTasks();
+}
+function quickAddTask(){
+  const input=document.getElementById('quickTaskInput');
+  const subj=document.getElementById('quickTaskSubject').value;
+  const title=input.value.trim();
+  if(!title) return;
+  tasks.unshift({id:Date.now(), title, subject:subj, estimate:"15 min", priority:"medium", done:false});
+  input.value='';
+  renderTasks();
+  showToast('Task added');
+}
+document.getElementById('quickTaskInput')?.addEventListener('keydown',e=>{ if(e.key==='Enter') quickAddTask(); });
+function openTaskModal(){ document.getElementById('taskModal').classList.remove('hidden'); document.getElementById('taskModal').classList.add('flex'); }
+function closeTaskModal(){ document.getElementById('taskModal').classList.add('hidden'); document.getElementById('taskModal').classList.remove('flex'); }
+function submitTask(e){
+  e.preventDefault();
+  const title=document.getElementById('taskTitle').value.trim();
+  const subject=document.getElementById('taskSubject').value;
+  const estimate=document.getElementById('taskEstimate').value;
+  const priority=document.querySelector('input[name="priority"]:checked').value;
+  if(!title) return;
+  tasks.unshift({id:Date.now(), title, subject, estimate, priority, done:false});
+  closeTaskModal();
+  e.target.reset();
+  renderTasks();
+  showToast('Task created');
+}
+function openCardModal(){ document.getElementById('cardModal').classList.remove('hidden'); document.getElementById('cardModal').classList.add('flex'); }
+function closeCardModal(){ document.getElementById('cardModal').classList.add('hidden'); document.getElementById('cardModal').classList.remove('flex'); delete document.getElementById('cardForm').dataset.editing; }
+function submitCard(e){
+  e.preventDefault();
+  const q=document.getElementById('cardQ').value.trim();
+  const a=document.getElementById('cardA').value.trim();
+  const subject=document.getElementById('cardSubject').value;
+  const tag=document.getElementById('cardTag').value.trim()||'General';
+  if(!q||!a) return;
+  const editing=document.getElementById('cardForm').dataset.editing;
+  if(editing!==undefined){
+    cards[parseInt(editing)]={q,a,subject,tag,due:true};
+    showToast('Card updated');
+  } else {
+    cards.unshift({q,a,subject,tag,due:true});
+    showToast('Card created');
+  }
+  closeCardModal();
+  e.target.reset();
+  currentCard=0;
+  updateStudyCard(); renderPreviewCards(); renderAllCards();
+}
+
+// Filters
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active','bg-ink','text-white'); b.classList.add('bg-black/5')});
+    btn.classList.add('active','bg-ink','text-white'); btn.classList.remove('bg-black/5');
+    filter=btn.dataset.filter;
+    renderTasks();
+  });
+});
+
+// Search
+document.getElementById('globalSearch')?.addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase();
+  if(!q) {renderTasks(); return;}
+  tasks.forEach(t=>{}); // simple: filter visually via CSS? For now filter tasks list
+  const filtered = tasks.filter(t=> t.title.toLowerCase().includes(q) || t.subject.toLowerCase().includes(q));
+  const list=document.getElementById('taskList');
+  if(filtered.length===0){ list.innerHTML=`<div class="text-center py-6 text-sm text-slate-500">No results for "${e.target.value}"</div>`; return;}
+  // temporarily render filtered without changing original
+  const prevFilter=filter;
+  filter='all';
+  // hack: render filtered directly
+  list.innerHTML = filtered.map(t=>`
+    <div class="flex items-center gap-3 p-3.5 rounded-2xl border ${t.done?'bg-sage border-emerald-200':'bg-cream border-black/5'}">
+      <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${t.done?'bg-emerald-500 border-emerald-500 text-white':''}">${t.done?'✓':''}</div>
+      <div class="flex-1 min-w-0"><div class="text-sm font-medium">${t.title}</div><div class="text-xs text-slate-500">${t.subject} • ${t.estimate}</div></div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+});
+document.getElementById('cardSearch')?.addEventListener('input',renderAllCards);
+document.getElementById('cardFilter')?.addEventListener('change',renderAllCards);
+
+// Simplify logic (mock intelligent)
+function mockSimplify(text, mode, level){
+  const clean = text.trim();
+  if(!clean) return `<div class="text-sm opacity-70">Paste some text first.</div>`;
+  const sentences = clean.split(/(?<=[.!?])\s+/);
+  const key = clean.toLowerCase();
+  // detect topic for analogy
+  let analogy = "Think of it like a busy city — everything moves to keep balance.";
+  if(key.includes('osmosis')||key.includes('water')) analogy = "Imagine a crowded concert: people (water) squeeze through a gate (membrane) to find space where it's less packed — until the crowd evens out.";
+  else if(key.includes('mitochondria')||key.includes('atp')||key.includes('respiration')) analogy = "Think of mitochondria as a power plant, and ATP as charged batteries it produces — batteries that power everything in the city (cell).";
+  else if(key.includes('photosynthesis')) analogy = "Like a kitchen that uses sunlight as the stove to cook food (glucose) from air (CO₂) and water.";
+  else if(key.includes('equilibrium')||key.includes('le chatelier')) analogy = "Like a seesaw: if you add weight to one side, it tilts, then the system shifts to rebalance.";
+
+  if(mode==='simple'){
+    const bullets = sentences.slice(0,4).map(s=>{
+      // fake simplification: shorten
+      let simple = s.replace(/semipermeable membrane/g,'tiny filter').replace(/solute concentration/g,'stuff dissolved in water').replace(/passive process/g,'no energy needed').replace(/equilibrium/g,'balance').replace(/turgor pressure/g,'firmness that keeps plants upright');
+      if(simple.length>110) simple = simple.split(',').slice(0,2).join(',') + '.';
+      return `<li class="flex gap-2"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent shrink-0"></span><span>${simple.trim()}</span></li>`;
+    }).join('');
+    return `
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 bg-white/15 rounded-full px-3 py-1 text-xs font-semibold">✨ Simplified • ELI15 • ${level}</div>
+        <ul class="space-y-2 text-sm leading-relaxed">${bullets}</ul>
+        <div class="bg-white text-ink rounded-2xl p-4 mt-2">
+          <div class="text-xs font-semibold tracking-widest uppercase text-slate-500">One-line takeaway</div>
+          <div class="text-sm font-medium mt-1">${sentences[0].split(' ').slice(0,14).join(' ')} — in short, water flows to balance things, with no energy needed.</div>
+        </div>
+      </div>`;
+  }
+  if(mode==='analogy'){
+    return `
+      <div class="space-y-4">
+        <div class="inline-flex items-center gap-2 bg-amber-400 text-ink rounded-full px-3 py-1 text-xs font-bold">💡 Analogy</div>
+        <p class="text-base leading-relaxed font-medium bg-white/10 rounded-2xl p-4 border border-white/10">${analogy}</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white/10 rounded-2xl p-3 border border-white/10"><div class="font-semibold">Concept</div><div class="opacity-80 leading-relaxed mt-1">${clean.slice(0,90)}...</div></div>
+          <div class="bg-white text-ink rounded-2xl p-3"><div class="font-semibold">Real life</div><div class="text-slate-600 leading-relaxed mt-1">${analogy}</div></div>
+        </div>
+        <div class="text-xs opacity-60">Why this helps: analogies link new info to something you already know → 2× better recall.</div>
+      </div>`;
+  }
+  if(mode==='steps'){
+    const steps = sentences.map((s,i)=>`<div class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white text-ink flex items-center justify-center text-xs font-bold shrink-0">${i+1}</span><span class="text-sm leading-relaxed pt-1">${s.trim()}</span></div>`).join('');
+    return `
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 bg-emerald-400 text-ink rounded-full px-3 py-1 text-xs font-bold">📋 Step-by-step</div>
+        <div class="space-y-3 mt-2">${steps}</div>
+        <div class="bg-white/10 rounded-2xl p-3 border border-white/10 text-sm">
+          <div class="font-semibold">Visual cue</div>
+          <div class="opacity-80 mt-1">Low concentration (more water) ➔ <b>membrane</b> ➔ High concentration (less water) ➔ <i>balance!</i></div>
+        </div>
+      </div>`;
+  }
+  if(mode==='quiz'){
+    const q1 = `What is the main idea of: "${sentences[0]?.slice(0,70)}..."?`;
+    const q2 = `Why doesn't this process require energy?`;
+    const q3 = `Give one real-life example where this matters.`;
+    return `
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 bg-violet-500 rounded-full px-3 py-1 text-xs font-bold">❓ Quiz • Try to answer before revealing</div>
+        <div class="space-y-3">
+          <details class="bg-white text-ink rounded-2xl p-4 group"><summary class="font-semibold text-sm cursor-pointer list-none flex justify-between items-center">1. ${q1} <span class="text-xs bg-ink text-white px-2 py-1 rounded-full group-open:hidden">Reveal</span></summary><div class="text-sm leading-relaxed mt-3 pt-3 border-t border-black/5">Answer: ${sentences[0]?.slice(0,120)} — it's about natural movement to reach balance.</div></details>
+          <details class="bg-white text-ink rounded-2xl p-4 group"><summary class="font-semibold text-sm cursor-pointer list-none flex justify-between items-center">2. ${q2} <span class="text-xs bg-ink text-white px-2 py-1 rounded-full group-open:hidden">Reveal</span></summary><div class="text-sm leading-relaxed mt-3 pt-3 border-t border-black/5">Because it's passive — water moves down its concentration gradient, like a ball rolling downhill, no cellular energy (ATP) required.</div></details>
+          <details class="bg-white text-ink rounded-2xl p-4 group"><summary class="font-semibold text-sm cursor-pointer list-none flex justify-between items-center">3. ${q3} <span class="text-xs bg-ink text-white px-2 py-1 rounded-full group-open:hidden">Reveal</span></summary><div class="text-sm leading-relaxed mt-3 pt-3 border-t border-black/5">${analogy}</div></details>
+        </div>
+        <button onclick="saveSimplifyAsCards()" class="w-full bg-white text-ink py-2.5 rounded-full text-sm font-semibold">Save these as flashcards</button>
+      </div>`;
+  }
+}
+function doSimplify(mode){
+  const text=document.getElementById('simplifyInput').value;
+  const levels=['Middle school','High school','University'];
+  const lvl = levels[parseInt(document.getElementById('levelRange').value)-1];
+  const html = mockSimplify(text, mode, lvl);
+  const out=document.getElementById('simplifyOutput');
+  out.innerHTML = html;
+  // also update quick output? no
+  lucide.createIcons();
+  // animate
+  out.animate([{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'translateY(0)'}],{duration:300, easing:'ease-out'});
+}
+function quickAction(mode){
+  const text=document.getElementById('quickInput').value;
+  const map={simple:'simple', analogy:'analogy', steps:'steps', quiz:'quiz'};
+  const html = mockSimplify(text, map[mode]||'simple', 'High school');
+  document.getElementById('quickOutputText').innerHTML = html.replace(/<[^>]*>/g,' ').slice(0,260) + '...';
+  // for richer, put HTML
+  if(mode==='simple'){
+    document.getElementById('quickOutput').innerHTML = `
+      <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+      <div class="text-xs tracking-widest uppercase opacity-60 font-semibold">Simplified</div>
+      <div class="text-sm leading-relaxed mt-2">${mockSimplify(text,'simple','High school')}</div>
+      <div class="flex gap-2 mt-3">
+        <button onclick="saveAsCard()" class="text-xs font-semibold bg-white text-ink px-3 py-1.5 rounded-full flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> Save as flashcards</button>
+        <button onclick="copyQuick()" class="text-xs font-semibold bg-white/15 px-3 py-1.5 rounded-full">Copy</button>
+      </div>`;
+    lucide.createIcons();
+  } else {
+    document.getElementById('quickOutput').innerHTML = `
+      <div class="text-xs tracking-widest uppercase opacity-60 font-semibold">Output • ${mode}</div>
+      <div class="text-sm leading-relaxed mt-2 bg-white/10 rounded-xl p-3 border border-white/10">${html.replace(/<[^>]*>/g,' ').slice(0,400)}</div>
+      <div class="flex gap-2 mt-3">
+        <button onclick="switchTab('simplify')" class="text-xs font-semibold bg-white text-ink px-3 py-1.5 rounded-full">Open in Simplify →</button>
+      </div>`;
+  }
+}
+function saveAsCard(){
+  const text=document.getElementById('quickInput').value;
+  if(!text.trim()) return showToast('Nothing to save');
+  cards.unshift({q: text.slice(0,80)+'?', a: mockSimplify(text,'simple','High school').replace(/<[^>]*>/g,'').slice(0,180), subject:"Biology", tag:"Quick", due:true});
+  renderPreviewCards(); updateStudyCard(); showToast('Saved as flashcard!');
+}
+function saveSimplifyAsCards(){
+  const text=document.getElementById('simplifyInput').value;
+  if(!text.trim()) return showToast('Add notes first');
+  const sentences=text.split(/(?<=[.!?])\s+/).slice(0,2);
+  sentences.forEach(s=>{
+    if(s.trim().length>20){
+      cards.unshift({q: s.slice(0,70)+'?', a: "Simplified: "+s.slice(0,140), subject:"Biology", tag:"Auto", due:true});
+    }
+  });
+  renderPreviewCards(); updateStudyCard(); renderAllCards();
+  showToast(`${sentences.length} cards created from notes!`);
+}
+function copyQuick(){
+  const txt=document.getElementById('quickOutputText').innerText;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Copied to clipboard'));
+}
+function copySimplify(){
+  const txt=document.getElementById('simplifyOutput').innerText;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Copied ✨'));
+}
+function clearSimplify(){ document.getElementById('simplifyInput').value=''; document.getElementById('charCount').textContent='0'; document.getElementById('simplifyOutput').innerHTML=`<div class="flex gap-3"><span class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center">✨</span><div><div class="font-semibold">Ready to simplify</div><p class="text-sm opacity-70">Paste your notes on the left and choose a mode.</p></div></div>`; }
+function loadSample(n){
+  const samples=[
+    "Osmosis is the movement of water molecules through a semipermeable membrane from a region of low solute concentration to a region of high solute concentration. It is a passive process and does not require energy. Water potential plays a key role and osmosis continues until equilibrium is reached.",
+    "Le Chatelier's principle states that if a dynamic equilibrium is disturbed by changing the conditions, the position of equilibrium shifts to counteract the change. For example, increasing pressure favors the side with fewer gas molecules. This is used in the Haber process to optimize ammonia yield.",
+    "The French Revolution began in 1789 due to social inequality, financial crisis, and Enlightenment ideas. The storming of the Bastille symbolized the uprising of the Third Estate. It led to the end of absolute monarchy and the rise of nationalism across Europe."
+  ];
+  document.getElementById('simplifyInput').value=samples[n-1];
+  updateChar();
+}
+function updateChar(){ document.getElementById('charCount').textContent=document.getElementById('simplifyInput').value.length; }
+document.getElementById('simplifyInput')?.addEventListener('input',updateChar);
+document.getElementById('levelRange')?.addEventListener('input',e=>{
+  const labels=['Middle school','High school','University'];
+  document.getElementById('levelLabel').textContent=labels[e.target.value-1];
+});
+
+// Feynman
+function checkFeynman(){
+  const val=document.getElementById('feynmanInput').value.trim();
+  const fb=document.getElementById('feynmanFeedback');
+  if(!val){ fb.classList.remove('hidden'); fb.innerHTML=`<span class="text-amber-600 font-semibold">Try writing 2-3 sentences in your own words first!</span>`; return; }
+  fb.classList.remove('hidden');
+  // mock analysis
+  const lower=val.toLowerCase();
+  let score=72, gaps=[];
+  if(!lower.includes('membrane') && !lower.includes('water')) gaps.push("Mention that water moves *through a membrane*");
+  if(!lower.includes('balance') && !lower.includes('equilibrium')) gaps.push("Emphasize the goal is *balance/equilibrium*");
+  if(!lower.includes('energy') && !lower.includes('passive')) gaps.push("Clarify it's *passive — no energy needed*");
+  if(gaps.length===0) gaps.push("Great! Try adding a real-life analogy to lock it in.");
+  const gapHtml = gaps.map(g=>`<li class="flex gap-2"><span class="text-amber-500">•</span><span>${g}</span></li>`).join('');
+  fb.innerHTML=`
+    <div class="flex items-center justify-between">
+      <span class="font-semibold flex items-center gap-2"><span class="w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center text-xs">✓</span> Understanding score: ${score+Math.floor(Math.random()*15)}%</span>
+      <span class="text-xs px-2 py-1 rounded-full bg-amber-100 border border-amber-200 font-medium">ELI15 check</span>
+    </div>
+    <div class="mt-3">
+      <div class="text-xs font-semibold tracking-widest uppercase text-slate-500">Gaps to fix</div>
+      <ul class="mt-1 space-y-1 text-sm">${gapHtml}</ul>
+    </div>
+    <div class="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm">
+      <div class="font-semibold">Suggested simpler version</div>
+      <div class="mt-1 leading-relaxed text-slate-700">Osmosis is water slipping through a filter to even things out — from where there's more water to where there's less — until both sides balance. No energy needed, it's just natural flow.</div>
+    </div>
+    <button onclick="addFeynmanToCards()" class="mt-3 w-full bg-ink text-white py-2 rounded-full text-sm font-semibold">Turn this into flashcards</button>
+  `;
+}
+function addFeynmanToCards(){
+  const v=document.getElementById('feynmanInput').value.slice(0,80);
+  cards.unshift({q:"Explain osmosis in your own words?",a: document.getElementById('feynmanInput').value.slice(0,180), subject:"Biology", tag:"Feynman", due:true});
+  renderPreviewCards(); updateStudyCard(); showToast('Saved your explanation as a card!');
+}
+
+// Timer
+let timerMode='focus';
+let timerSeconds=25*60;
+let timerInterval=null;
+let isRunning=false;
+let session=1;
+const modes={focus:25*60, short:5*60, long:15*60};
+function formatTime(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
+function setTimerMode(mode){
+  timerMode=mode;
+  timerSeconds=modes[mode];
+  updateTimerDisplay();
+  document.querySelectorAll('.timer-mode,.timer-mode-lg').forEach(b=>b.classList.remove('active','bg-ink','text-white','bg-white','shadow-sm'));
+  // set active
+  ['focus','short','long'].forEach(m=>{
+    const a=document.getElementById(`mode-${m}`);
+    const b=document.getElementById(`f-mode-${m}`);
+    if(m===mode){
+      if(a){ a.classList.add('active','bg-white','shadow-sm'); }
+      if(b){ b.classList.add('active','bg-ink','text-white'); }
+    }
+  });
+  // progress
+  updateTimerDisplay();
+  if(isRunning){ clearInterval(timerInterval); isRunning=false; document.getElementById('timerBtn') && (document.getElementById('timerBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start`); document.getElementById('focusBtn') && (document.getElementById('focusBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start focusing`); lucide.createIcons(); }
+}
+function updateTimerDisplay(){
+  const total=modes[timerMode];
+  const pct = 1 - (timerSeconds/total);
+  const dash = 553 - pct*0; // for first timer
+  document.getElementById('timerDisplay').textContent=formatTime(timerSeconds);
+  document.getElementById('focusDisplay').textContent=formatTime(timerSeconds);
+  const p1=document.getElementById('timerProgress');
+  const p2=document.getElementById('focusProgress');
+  const circ1=2*Math.PI*88; // 552.9
+  const circ2=2*Math.PI*130; // 817
+  if(p1) p1.style.strokeDashoffset = circ1 * pct;
+  if(p2) p2.style.strokeDashoffset = circ2 * pct;
+  document.getElementById('timerLabel').textContent = timerMode==='focus'?'Deep work':timerMode==='short'?'Short break':'Long break';
+}
+function toggleTimer(){
+  if(isRunning){
+    clearInterval(timerInterval); isRunning=false;
+    document.getElementById('timerBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Resume`;
+    document.getElementById('focusBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Resume`;
+  } else {
+    isRunning=true;
+    document.getElementById('timerBtn').innerHTML=`<i data-lucide="pause" class="w-4 h-4 fill-white"></i> Pause`;
+    document.getElementById('focusBtn').innerHTML=`<i data-lucide="pause" class="w-4 h-4 fill-white"></i> Pause`;
+    timerInterval=setInterval(()=>{
+      timerSeconds--;
+      if(timerSeconds<=0){
+        clearInterval(timerInterval); isRunning=false;
+        showToast(timerMode==='focus'?'Focus complete! Take a break 🎉':'Break over — back to focus!');
+        // chime
+        try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); const o=ctx.createOscillator(); o.connect(ctx.destination); o.frequency.value=880; o.start(); setTimeout(()=>o.stop(),250);}catch(e){}
+        // auto switch
+        if(timerMode==='focus'){ session=(session%4)+1; document.getElementById('timerSession').textContent=`Session ${session} of 4`; if(session===1) setTimerMode('long'); else setTimerMode('short'); } else { setTimerMode('focus'); }
+        document.getElementById('timerBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start`;
+        document.getElementById('focusBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start focusing`;
+        lucide.createIcons();
+        return;
+      }
+      updateTimerDisplay();
+    },1000);
+  }
+  lucide.createIcons();
+}
+function resetTimer(){ clearInterval(timerInterval); isRunning=false; timerSeconds=modes[timerMode]; updateTimerDisplay(); document.getElementById('timerBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start`; document.getElementById('focusBtn').innerHTML=`<i data-lucide="play" class="w-4 h-4 fill-white"></i> Start focusing`; lucide.createIcons(); }
+function skipTimer(){ timerSeconds=0; updateTimerDisplay(); toggleTimer(); toggleTimer(); }
+
+// Navigation
+function switchTab(tab){
+  document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
+  document.getElementById(`view-${tab}`).classList.remove('hidden');
+  document.querySelectorAll('.nav-btn').forEach(b=>{ b.classList.remove('active','bg-ink','text-white'); b.classList.add('hover:bg-black/5'); if(b.dataset.nav===tab){ b.classList.add('active','bg-ink','text-white'); b.classList.remove('hover:bg-black/5'); }});
+  document.querySelectorAll('.nav-btn-mobile').forEach(b=>{ b.classList.remove('active','bg-ink','text-white'); b.classList.add('bg-black/5'); if(b.dataset.nav===tab){ b.classList.add('active','bg-ink','text-white'); b.classList.remove('bg-black/5'); }});
+  document.getElementById('mobileNav')?.classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+  lucide.createIcons();
+}
+document.querySelectorAll('[data-nav]').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.nav)));
+document.getElementById('mobileMenuBtn')?.addEventListener('click',()=>document.getElementById('mobileNav').classList.toggle('hidden'));
+
+// Toast
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.remove('hidden'); t.classList.add('flex');
+  lucide.createIcons();
+  clearTimeout(t._to);
+  t._to=setTimeout(()=>{ t.classList.add('hidden'); t.classList.remove('flex'); }, 2600);
+}
+
+// Init
+renderSubjects();
+renderTasks();
+renderPreviewCards();
+updateStudyCard();
+renderAllCards();
+updateChar();
+updateTimerDisplay();
+lucide.createIcons();
+
+// Close modals on outside click
+document.getElementById('taskModal')?.addEventListener('click',e=>{ if(e.target.id==='taskModal') closeTaskModal(); });
+document.getElementById('cardModal')?.addEventListener('click',e=>{ if(e.target.id==='cardModal') closeCardModal(); });
+</script>
+</body>
+</html>
